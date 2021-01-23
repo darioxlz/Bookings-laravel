@@ -24,18 +24,19 @@ class AuthController extends Controller
 
         if ($validator->fails()) {
             return response()->json($validator->errors()->first(), 400);
-        } else {
-            $usuario = $request->all();
-            $usuario['password'] = Hash::make($usuario['password']);
-
-            $user = User::create($usuario);
-
-            if ($this->token) {
-                return $this->login($request);
-            }
-
-            return response()->json($user, 201);
         }
+
+
+        $usuario = $request->all();
+        $usuario['password'] = Hash::make($usuario['password']);
+
+        $user = User::create($usuario);
+
+        if ($this->token) {
+            return $this->login($request);
+        }
+
+        return response()->json($user, 201);
     }
 
     public function login(Request $request)
@@ -47,33 +48,26 @@ class AuthController extends Controller
             return response()->json([
                 'error' => 'Invalid Email or Password',
             ], 401);
-        } else {
-            return response()->json([
-                'token' => $jwt_token,
-            ], 200);
         }
+
+
+        return response()->json([
+            'token' => $jwt_token,
+        ], 200);
     }
 
     public function logout(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'token' => 'required'
-        ]);
+        try {
+            JWTAuth::invalidate($request->token);
 
-        if ($validator->fails()) {
-            return response()->json($validator->errors()->first(), 400);
-        } else {
-            try {
-                JWTAuth::invalidate($request->token);
-
-                return response()->json([
-                    'message' => 'User logged out successfully'
-                ]);
-            } catch (JWTException $exception) {
-                return response()->json([
-                    'message' => 'Sorry, the user cannot be logged out'
-                ], 500);
-            }
+            return response()->json([
+                'message' => 'User logged out successfully'
+            ]);
+        } catch (JWTException $exception) {
+            return response()->json([
+                'message' => 'Sorry, the user cannot be logged out'
+            ], 500);
         }
     }
 

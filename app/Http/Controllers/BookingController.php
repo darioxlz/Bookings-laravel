@@ -8,7 +8,8 @@ use Illuminate\Support\Facades\Validator;
 
 class BookingController extends Controller
 {
-    public function index(Request $request) {
+    public function index(Request $request)
+    {
         $validated = Validator::make($request->all(), [
             'dateAfter' => 'date',
             'dateBefore' => 'date|after:dateAfter'
@@ -16,26 +17,29 @@ class BookingController extends Controller
 
         if ($validated->fails()) {
             return response()->json($validated->errors()->first(), 400);
-        } else {
-            $bookings = Booking::with('member')->with('facility');
-
-            if ($request->has('dateAfter')) {
-                $bookings = $bookings->whereDate('starttime', '>=', $request->dateAfter);
-            }
-
-            if ($request->has('dateBefore')) {
-                $bookings = $bookings->whereDate('starttime', '<=', $request->dateBefore);
-            }
-
-            return $bookings->orderBy('bookid')->get();
         }
+
+
+        $bookings = Booking::with('member')->with('facility');
+
+        if ($request->has('dateAfter')) {
+            $bookings = $bookings->whereDate('starttime', '>=', $request->dateAfter);
+        }
+
+        if ($request->has('dateBefore')) {
+            $bookings = $bookings->whereDate('starttime', '<=', $request->dateBefore);
+        }
+
+        return $bookings->orderBy('bookid')->get();
     }
 
-    public function show($id) {
-        return Booking::with('member')->with('facility')->findOrFail($id);
+    public function show(Booking $booking)
+    {
+        return $booking;
     }
 
-    public function store(Request $request) {
+    public function store(Request $request)
+    {
         $validated = Validator::make($request->all(), [
             'facid' => 'required|integer|exists:facilities,facid',
             'memid' => 'required|integer|exists:members,memid',
@@ -46,14 +50,16 @@ class BookingController extends Controller
 
         if ($validated->fails()) {
             return response()->json($validated->errors()->first(), 400);
-        } else {
-            $booking = Booking::create($request->all());
-
-            return response()->json($booking, 201);
         }
+
+
+        $booking = Booking::create($request->all());
+
+        return response()->json($booking, 201);
     }
 
-    public function update(Request $request, $id) {
+    public function update(Request $request, Booking $booking)
+    {
         $validated = Validator::make($request->all(), [
             'facid' => 'integer|exists:facilities,facid',
             'memid' => 'integer|exists:members,memid',
@@ -64,15 +70,17 @@ class BookingController extends Controller
 
         if ($validated->fails()) {
             return response()->json($validated->errors()->first(), 400);
-        } else {
-            Booking::findOrFail($id)->update($request->all());
-
-            return response()->json(Booking::findOrFail($id), 200);
         }
+
+
+        $booking->update($request->all());
+
+        return response()->json($booking, 200);
     }
 
-    public function delete($id) {
-        Booking::findOrFail($id)->delete();
+    public function destroy(Booking $booking)
+    {
+        $booking->delete();
 
         return response()->json(null, 204);
     }

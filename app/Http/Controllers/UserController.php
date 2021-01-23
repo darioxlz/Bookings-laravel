@@ -9,34 +9,18 @@ use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
-    public function index() {
+    public function index()
+    {
         return User::orderBy('userid')->get();
     }
 
-    public function show($id) {
-        return User::where('userid', '=', $id)->get();
+    public function show(User $user)
+    {
+        return $user;
     }
 
-    public function store(Request $request) {
-        $validated = Validator::make($request->all(), [
-            'name' => 'required|string|min:3|max:255',
-            'email' => 'required|email|unique:users',
-            'password' => 'required|min:8'
-        ]);
-
-        if ($validated->fails()) {
-            return response()->json($validated->errors()->first(), 400);
-        } else {
-            $usuario = $request->all();
-            $usuario['password'] = Hash::make($usuario['password']);
-
-            $user = User::create($usuario);
-
-            return response()->json($user, 201);
-        }
-    }
-
-    public function update(Request $request, $id) {
+    public function update(Request $request, User $user)
+    {
         $validated = Validator::make($request->all(), [
             'name' => 'string|min:3|max:255',
             'email' => 'email|unique:users',
@@ -45,21 +29,23 @@ class UserController extends Controller
 
         if ($validated->fails()) {
             return response()->json($validated->errors()->first(), 400);
-        } else {
-            $usuario = $request->all();
-
-            if ($request->has('password')) {
-                $usuario['password'] = Hash::make($usuario['password']);
-            }
-
-            User::findOrFail($id)->update($usuario);
-
-            return response()->json(User::findOrFail($id), 200);
         }
+
+
+        $usuario = $request->all();
+
+        if ($request->has('password')) {
+            $usuario['password'] = Hash::make($usuario['password']);
+        }
+
+        $user->update($usuario);
+
+        return response()->json($user, 200);
     }
 
-    public function delete($id) {
-        User::findOrFail($id)->delete();
+    public function destroy(User $user)
+    {
+        $user->delete();
 
         return response()->json(null, 204);
     }

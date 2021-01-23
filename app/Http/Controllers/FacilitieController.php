@@ -5,26 +5,27 @@ namespace App\Http\Controllers;
 use App\Models\Booking;
 use Illuminate\Http\Request;
 use App\Models\Facilitie;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class FacilitieController extends Controller
 {
-    public function index() {
+    public function index()
+    {
         return Facilitie::orderBy('facid')->get();
     }
 
-    public function reservations($id) {
-        return Booking::whereHas('facility', function ($query) use ($id) {
-            $query->where('facid', '=', $id);
-        })->orderBy('bookid')->get();
+    public function reservations($id)
+    {
+        return Booking::getReservationsByFacId($id)->get();
     }
 
-    public function show($id) {
-        return Facilitie::where('facid', '=', $id)->get();
+    public function show(Facilitie $facilitie)
+    {
+        return $facilitie;
     }
 
-    public function store(Request $request) {
+    public function store(Request $request)
+    {
         $validated = Validator::make($request->all(), [
             'name' => 'required|string|min:3|max:255',
             'membercost' => 'required|numeric',
@@ -36,14 +37,16 @@ class FacilitieController extends Controller
 
         if ($validated->fails()) {
             return response()->json($validated->errors()->first(), 400);
-        } else {
-            $facilitie = Facilitie::create($request->all());
-
-            return response()->json($facilitie, 201);
         }
+
+
+        $facilitie = Facilitie::create($request->all());
+
+        return response()->json($facilitie, 201);
     }
 
-    public function update(Request $request, $id) {
+    public function update(Request $request, Facilitie $facilitie)
+    {
         $validated = Validator::make($request->all(), [
             'name' => 'string|min:3|max:255',
             'membercost' => 'numeric',
@@ -55,15 +58,17 @@ class FacilitieController extends Controller
 
         if ($validated->fails()) {
             return response()->json($validated->errors()->first(), 400);
-        } else {
-            Facilitie::findOrFail($id)->update($request->all());
-
-            return response()->json(Facilitie::findOrFail($id), 200);
         }
+
+
+        $facilitie->update($request->all());
+
+        return response()->json($facilitie, 200);
     }
 
-    public function delete($id) {
-        Facilitie::findOrFail($id)->delete();
+    public function destroy(Facilitie $facilitie)
+    {
+        $facilitie->delete();
 
         return response()->json(null, 204);
     }
