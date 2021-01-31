@@ -11,7 +11,7 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthController extends Controller
 {
-    public $token = true;
+    public $token = false;
 
     public function register(Request $request)
     {

@@ -21,7 +21,7 @@ class BookingsTableSeeder extends Seeder
         $facilities = Facilitie::all();
         $members = Member::all();
 
-        Booking::factory()->count(1000)->create()->each(function ($booking) use ($facilities, $members) {
+        Booking::factory()->count(100)->create()->each(function ($booking) use ($facilities, $members) {
             $booking->update(['facid' => $facilities->random()->facid]);
             $booking->update(['memid' => $members->random()->memid]);
         });

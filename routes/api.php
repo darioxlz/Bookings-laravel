@@ -17,12 +17,12 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-Route::post('register', [AuthController::class, 'register']);
-Route::post('login', [AuthController::class, 'login']);
+Route::post('register', [AuthController::class, 'register'])->name('auth.register');
+Route::post('login', [AuthController::class, 'login'])->name('auth.login');
 
 Route::group(['middleware' => 'jwt.verify'], function () {
-    Route::get('logout', [AuthController::class, 'logout']);
-    Route::get('user-info', [AuthController::class, 'getUser']);
+    Route::get('logout', [AuthController::class, 'logout'])->name('auth.logout');
+    Route::get('user-info', [AuthController::class, 'getUser'])->name('auth.user-info');
 
     Route::apiResource('users', UserController::class)->except([
         'create', 'store'
