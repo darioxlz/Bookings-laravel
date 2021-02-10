@@ -57,7 +57,7 @@ class MemberController extends Controller
         ]);
 
         if ($validated->fails()) {
-            return response()->json($validated->errors()->first(), 400);
+            return response()->json($validated->errors()->first(), 422);
         }
 
 

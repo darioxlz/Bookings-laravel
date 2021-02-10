@@ -23,9 +23,8 @@ class AuthController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json($validator->errors()->first(), 400);
+            return response()->json($validator->errors()->first(), 422);
         }
-
 
         $usuario = $request->all();
         $usuario['password'] = Hash::make($usuario['password']);
