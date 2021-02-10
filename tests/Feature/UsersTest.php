@@ -141,9 +141,43 @@ class UsersTest extends TestCase
     /** @test */
     public function user_can_delete_his_account()
     {
+        $this->assertDatabaseHas('users', ['email' => $this->user->email]);
+
         $response = $this->delete(route('users.destroy', ['user' => $this->user->userid]), [], $this->token);
 
         $response->assertStatus(204);
         $this->assertDatabaseMissing('users', ['email' => $this->user->email]);
+    }
+
+    /** @test */
+    public function user_cannot_interact_without_jwt()
+    {
+        $this->put(route('users.update', ['user' => $this->user->userid]))->assertStatus(401);
+        $this->delete(route('users.destroy', ['user' => $this->user->userid]))->assertStatus(401);
+
+
+        $this->get(route('auth.logout'))->assertStatus(401);
+        $this->get(route('auth.user-info'))->assertStatus(401);
+
+
+        $memid = \App\Models\Member::factory()->create()->toArray()['memid'];
+        $this->get(route('members.index'))->assertStatus(401);
+        $this->post(route('members.store'))->assertStatus(401);
+        $this->put(route('members.update', ['member' => $memid]))->assertStatus(401);
+        $this->delete(route('members.destroy', ['member' => $memid]))->assertStatus(401);
+
+
+        $facid = \App\Models\Facilitie::factory()->create()->toArray()['facid'];
+        $this->get(route('facilities.index'))->assertStatus(401);
+        $this->post(route('facilities.store'))->assertStatus(401);
+        $this->put(route('facilities.update', ['facility' => $facid]))->assertStatus(401);
+        $this->delete(route('facilities.destroy', ['facility' => $facid]))->assertStatus(401);
+
+
+        $bookid = \App\Models\Booking::factory()->create()->toArray()['bookid'];
+        $this->get(route('bookings.index'))->assertStatus(401);
+        $this->post(route('bookings.store'))->assertStatus(401);
+        $this->put(route('bookings.update', ['booking' => $bookid]))->assertStatus(401);
+        $this->delete(route('bookings.destroy', ['booking' => $bookid]))->assertStatus(401);
     }
 }
