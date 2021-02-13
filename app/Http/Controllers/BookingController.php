@@ -38,6 +38,11 @@ class BookingController extends Controller
         return $booking;
     }
 
+    public function bookingsByMemId($memid)
+    {
+        return Booking::getBookingsByMemId($memid)->get();
+    }
+
     public function store(Request $request)
     {
         $validated = Validator::make($request->all(), [
@@ -49,7 +54,7 @@ class BookingController extends Controller
         ]);
 
         if ($validated->fails()) {
-            return response()->json($validated->errors()->first(), 400);
+            return response()->json($validated->errors()->first(), 422);
         }
 
 

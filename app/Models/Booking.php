@@ -54,7 +54,7 @@ class Booking extends Model
         })->orderBy('bookid');
     }
 
-    public static function getReservationsByMemId($id) {
+    public static function getBookingsByMemId($id) {
         return self::whereHas('member', function ($query) use ($id) {
             $query->where('memid', '=', $id);
         })->orderBy('bookid');

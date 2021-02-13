@@ -34,10 +34,10 @@ class MemberController extends Controller
         return $members->orderBy('memid')->get();
     }
 
-    public function reservations($id)
-    {
-        return Booking::getReservationsByMemId($id)->get();
-    }
+//    public function reservations($id)
+//    {
+//        return Booking::getReservationsByMemId($id)->get();
+//    }
 
     public function show(Member $member)
     {
@@ -78,7 +78,7 @@ class MemberController extends Controller
         ]);
 
         if ($validated->fails()) {
-            return response()->json($validated->errors()->first(), 400);
+            return response()->json($validated->errors()->first(), 422);
         }
 
 

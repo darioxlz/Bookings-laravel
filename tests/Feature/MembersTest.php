@@ -69,6 +69,43 @@ class MembersTest extends TestCase
     }
 
     /** @test */
+    public function createdby_must_exists()
+    {
+        $member = Member::factory()->make(['createdby' => 999999])->toArray();
+
+        $this->post(route('members.store'), $member, $this->token)->assertStatus(422);
+    }
+
+    /** @test */
+    public function can_show_member_by_id()
+    {
+        $member = Member::factory()->create()->toArray();
+
+        $response = $this->put(route('members.show', ['member' => $member['memid']]), [], $this->token);
+
+        $response->assertStatus(200)->assertJsonStructure([
+            'surname',
+            'firstname',
+            'address',
+            'zipcode',
+            'telephone',
+            'recommendedby',
+            'createdby',
+            'memid'
+        ]);
+    }
+
+    /** @test */
+    public function can_not_show_member_by_wrong_id()
+    {
+        $member = Member::factory()->create()->toArray();
+
+        $response = $this->put(route('members.show', ['member' => 99999]), [], $this->token);
+
+        $response->assertStatus(404);
+    }
+
+    /** @test */
     public function member_can_update_his_information()
     {
         $member = Member::factory()->create()->toArray();
@@ -82,6 +119,7 @@ class MembersTest extends TestCase
 
         $memberUpdated = json_decode($response->getContent());
         $this->assertEquals($newData['firstname'], $memberUpdated->firstname);
+        $this->assertEquals($newData['surname'], $memberUpdated->surname);
 
         $response->assertStatus(200)->assertJsonStructure([
             'firstname', 'surname'
@@ -92,6 +130,8 @@ class MembersTest extends TestCase
     public function member_can_delete_his_account()
     {
         $member = Member::factory()->create()->toArray();
+
+        $this->assertDatabaseHas('members', ['memid' => $member['memid']]);
 
         $response = $this->delete(route('members.destroy', ['member' => $member['memid']]), [], $this->token);
 

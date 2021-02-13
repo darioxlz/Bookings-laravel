@@ -19,7 +19,11 @@ class UsersTest extends TestCase
         unset($user['password']);
         unset($user['confirm_password']);
 
-        $response->assertStatus(201);
+        $response->assertStatus(201)->assertJsonStructure([
+            'name',
+            'email',
+            'userid'
+        ]);
         $this->assertDatabaseHas('users', $user);
     }
 
@@ -118,6 +122,26 @@ class UsersTest extends TestCase
         $response = $this->get(route('auth.user-info'), $this->token);
 
         $response->assertStatus(200);
+    }
+
+    /** @test */
+    public function can_show_user_by_id()
+    {
+        $response = $this->put(route('users.show', ['user' => $this->user->userid]), [], $this->token);
+
+        $response->assertStatus(200)->assertJsonStructure([
+            'name',
+            'email',
+            'userid'
+        ]);
+    }
+
+    /** @test */
+    public function can_not_show_user_by_wrong_id()
+    {
+        $response = $this->put(route('users.show', ['user' => 9999]), [], $this->token);
+
+        $response->assertStatus(404);
     }
 
     /** @test */

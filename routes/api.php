@@ -30,12 +30,12 @@ Route::group(['middleware' => 'jwt.verify'], function () {
     ]);
 
     Route::apiResource('members', MemberController::class);
-    Route::get('members/{id}/bookings', [MemberController::class, 'reservations']);
 
 
     Route::apiResource('facilities', FacilitieController::class);
-    Route::get('facilities/{id}/bookings', [FacilitieController::class, 'reservations']);
+    Route::get('facilities/bookings/{facid}', [FacilitieController::class, 'bookingsByFacId'])->name('facilities.reservations');
 
 
     Route::apiResource('bookings', BookingController::class);
+    Route::get('bookings/member/{memid}', [BookingController::class, 'bookingsByMemId'])->name('bookings.reservations');
 });

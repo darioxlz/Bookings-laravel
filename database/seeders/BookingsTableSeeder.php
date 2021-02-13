@@ -3,8 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\Booking;
-use App\Models\Facilitie;
-use App\Models\Member;
 use Illuminate\Database\Seeder;
 
 class BookingsTableSeeder extends Seeder
@@ -18,12 +16,6 @@ class BookingsTableSeeder extends Seeder
     {
         Booking::truncate();
 
-        $facilities = Facilitie::all();
-        $members = Member::all();
-
-        Booking::factory()->count(100)->create()->each(function ($booking) use ($facilities, $members) {
-            $booking->update(['facid' => $facilities->random()->facid]);
-            $booking->update(['memid' => $members->random()->memid]);
-        });
+        Booking::factory()->count(100)->create();
     }
 }
