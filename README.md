@@ -11,6 +11,9 @@
 7. Run ```php artisan serve```
 8. Use one API REST Client of your preference to make the requests. Check ```php artisan route:list```
 
+Take a look to documentation
+https://documenter.getpostman.com/view/5958984/TWDcGadW
+
 Take a look to database diagram entity-relation
 
 ![ER Diagram](https://raw.githubusercontent.com/josevenezuelapadron/Bookings-laravel/master/clubdata.PNG)

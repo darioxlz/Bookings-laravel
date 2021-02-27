@@ -72,7 +72,7 @@ class MemberController extends Controller
             'surname' => 'string|min:3|max:255',
             'firstname' => 'string|min:3|max:255',
             'address' => 'string|min:3|max:255',
-            'zipcode' => 'integer|min:3',
+            'zipcode' => 'min:3',
             'telephone' => 'min:3',
             'recommendedby' => 'integer|exists:members,memid'
         ]);
