@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Booking;
 use Illuminate\Http\Request;
 use App\Models\Facilitie;
 use Illuminate\Support\Facades\Validator;
@@ -12,11 +11,6 @@ class FacilitieController extends Controller
     public function index()
     {
         return Facilitie::orderBy('facid')->get();
-    }
-
-    public function bookingsByFacId($facid)
-    {
-        return Booking::getReservationsByFacId($facid)->get();
     }
 
     public function show(Facilitie $facility)
@@ -31,8 +25,7 @@ class FacilitieController extends Controller
             'membercost' => 'required|numeric',
             'guestcost' => 'required|numeric',
             'initialoutlay' => 'required|numeric',
-            'monthlymaintenance' => 'required|numeric',
-            'createdby' => 'required|integer|exists:users,userid'
+            'monthlymaintenance' => 'required|numeric'
         ]);
 
         if ($validated->fails()) {

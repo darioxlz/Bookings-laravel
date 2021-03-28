@@ -23,8 +23,6 @@ class CreateMembersTable extends Migration
             $table->integer('recommendedby')->unsigned()->nullable();
             $table->foreign('recommendedby')->references('memid')->on('members')->onDelete('set null');
             $table->timestamp('joindate')->useCurrent();
-            $table->integer('createdby')->unsigned();
-            $table->foreign('createdby')->references('userid')->on('users')->onDelete('cascade');
         });
     }
 

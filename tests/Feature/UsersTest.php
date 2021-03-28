@@ -1,5 +1,8 @@
 <?php
 
+use App\Models\Booking;
+use App\Models\Facilitie;
+use App\Models\Member;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\Concerns\InteractsWithExceptionHandling;
 use Tests\TestCase;
@@ -184,21 +187,21 @@ class UsersTest extends TestCase
         $this->get(route('auth.user-info'))->assertStatus(401);
 
 
-        $memid = \App\Models\Member::factory()->create()->toArray()['memid'];
+        $memid = Member::factory()->create()->toArray()['memid'];
         $this->get(route('members.index'))->assertStatus(401);
         $this->post(route('members.store'))->assertStatus(401);
         $this->put(route('members.update', ['member' => $memid]))->assertStatus(401);
         $this->delete(route('members.destroy', ['member' => $memid]))->assertStatus(401);
 
 
-        $facid = \App\Models\Facilitie::factory()->create()->toArray()['facid'];
+        $facid = Facilitie::factory()->create()->toArray()['facid'];
         $this->get(route('facilities.index'))->assertStatus(401);
         $this->post(route('facilities.store'))->assertStatus(401);
         $this->put(route('facilities.update', ['facility' => $facid]))->assertStatus(401);
         $this->delete(route('facilities.destroy', ['facility' => $facid]))->assertStatus(401);
 
 
-        $bookid = \App\Models\Booking::factory()->create()->toArray()['bookid'];
+        $bookid = Booking::factory()->create()->toArray()['bookid'];
         $this->get(route('bookings.index'))->assertStatus(401);
         $this->post(route('bookings.store'))->assertStatus(401);
         $this->put(route('bookings.update', ['booking' => $bookid]))->assertStatus(401);

@@ -36,8 +36,7 @@ class Booking extends Model
         'facid',
         'memid',
         'starttime',
-        'slots',
-        'createdby'
+        'slots'
     ];
 
     public function facility() {
@@ -46,17 +45,5 @@ class Booking extends Model
 
     public function member() {
         return $this->belongsTo(\App\Models\Member::class, 'memid', 'memid');
-    }
-
-    public static function getReservationsByFacId($id) {
-        return self::whereHas('facility', function ($query) use ($id) {
-            $query->where('facid', '=', $id);
-        })->orderBy('bookid');
-    }
-
-    public static function getBookingsByMemId($id) {
-        return self::whereHas('member', function ($query) use ($id) {
-            $query->where('memid', '=', $id);
-        })->orderBy('bookid');
     }
 }

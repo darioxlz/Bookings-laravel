@@ -30,8 +30,7 @@ class MemberFactory extends Factory
             'address' => $this->faker->address,
             'zipcode' => $this->faker->randomNumber(4),
             'telephone' => $this->faker->phoneNumber,
-            'joindate' => $this->faker->dateTimeBetween('2012-07-01', '2012-09-26'),
-            'createdby' => $users->random()->userid
+            'joindate' => $this->faker->dateTimeBetween('2012-07-01', '2012-09-26')
         ];
     }
 }

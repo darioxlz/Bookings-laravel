@@ -25,7 +25,6 @@ class FacilitiesTest extends TestCase
             'guestcost',
             'initialoutlay',
             'monthlymaintenance',
-            'createdby',
             'facid'
         ]);
     }
@@ -53,19 +52,11 @@ class FacilitiesTest extends TestCase
         // Testing with all attributes but invalid syntax
         $this->post(route('facilities.store'), [
             'name' => 'John',
-            'membercost' => 11,
-            'guestcost' => 11,
+            'membercost' => "aq",
+            'guestcost' => "p",
             'initialoutlay' => 99,
-            'monthlymaintenance' => 9999
+            'monthlymaintenance' => "kkkk"
         ], $this->token)->assertStatus(422);
-    }
-
-    /** @test */
-    public function createdby_must_exists()
-    {
-        $facility = Facilitie::factory()->make(['createdby' => 999999])->toArray();
-
-        $this->post(route('facilities.store'), $facility, $this->token)->assertStatus(422);
     }
 
     /** @test */
@@ -81,32 +72,8 @@ class FacilitiesTest extends TestCase
             'guestcost',
             'initialoutlay',
             'monthlymaintenance',
-            'createdby',
             'facid'
         ]);
-    }
-
-    /** @test */
-    public function can_not_be_show_facility_by_wrong_id()
-    {
-        $facility = Facilitie::factory()->create()->toArray();
-
-        $response = $this->put(route('facilities.show', ['facility' => 999999]), [], $this->token);
-
-        $response->assertStatus(404);
-    }
-
-    /** @test */
-    public function can_show_bookings_by_facid()
-    {
-        \App\Models\Member::factory()->create()->toArray();
-        $facility = Facilitie::factory()->create()->toArray();
-
-        \App\Models\Booking::factory()->count(15)->create(['facid' => $facility['facid']])->toArray();
-
-        $response = $this->get(route('facilities.reservations', ['facid' => $facility['facid']]), $this->token);
-
-        $response->assertStatus(200)->assertJsonCount(15);
     }
 
     /** @test */

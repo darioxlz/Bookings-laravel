@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\Facilitie;
+use App\Models\Member;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\Concerns\InteractsWithExceptionHandling;
 use Tests\TestCase;
@@ -13,8 +15,8 @@ class BookingsTest extends TestCase
     /** @test */
     public function can_create_booking_with_valid_data()
     {
-        \App\Models\Facilitie::factory()->create();
-        \App\Models\Member::factory()->create();
+        Facilitie::factory()->create();
+        Member::factory()->create();
 
         $booking = Booking::factory()->make()->toArray();
 
@@ -27,7 +29,6 @@ class BookingsTest extends TestCase
             'memid',
             'starttime',
             'slots',
-            'createdby',
             'bookid'
         ]);
     }
@@ -64,8 +65,8 @@ class BookingsTest extends TestCase
     /** @test */
     public function facid_must_exists()
     {
-        \App\Models\Member::factory()->create();
-        \App\Models\Facilitie::factory()->create();
+        Member::factory()->create();
+        Facilitie::factory()->create();
 
         $booking = Booking::factory()->make(['facid' => 999999])->toArray();
 
@@ -75,8 +76,8 @@ class BookingsTest extends TestCase
     /** @test */
     public function memid_must_exists()
     {
-        \App\Models\Member::factory()->create();
-        \App\Models\Facilitie::factory()->create();
+        Member::factory()->create();
+        Facilitie::factory()->create();
 
         $booking = Booking::factory()->make(['memid' => 999999])->toArray();
 
@@ -86,8 +87,8 @@ class BookingsTest extends TestCase
     /** @test */
     public function can_show_booking_by_id()
     {
-        \App\Models\Member::factory()->create();
-        \App\Models\Facilitie::factory()->create();
+        Member::factory()->create();
+        Facilitie::factory()->create();
 
         $booking = Booking::factory()->create()->toArray();
 
@@ -98,7 +99,6 @@ class BookingsTest extends TestCase
             'memid',
             'starttime',
             'slots',
-            'createdby',
             'bookid'
         ]);
     }
@@ -106,8 +106,8 @@ class BookingsTest extends TestCase
     /** @test */
     public function can_not_show_booking_by_wrong_id()
     {
-        \App\Models\Member::factory()->create();
-        \App\Models\Facilitie::factory()->create();
+        Member::factory()->create();
+        Facilitie::factory()->create();
 
         Booking::factory()->create()->toArray();
 
@@ -117,23 +117,10 @@ class BookingsTest extends TestCase
     }
 
     /** @test */
-    public function can_show_bookings_by_memid()
-    {
-        $member = \App\Models\Member::factory()->create()->toArray();
-        \App\Models\Facilitie::factory()->count(3)->create();
-
-        Booking::factory()->count(15)->create()->toArray();
-
-        $response = $this->get(route('bookings.reservations', ['memid' => $member['memid']]), $this->token);
-
-        $response->assertStatus(200)->assertJsonCount(15);
-    }
-
-    /** @test */
     public function booking_can_update_his_information()
     {
-        \App\Models\Member::factory()->create();
-        \App\Models\Facilitie::factory()->create();
+        Member::factory()->create();
+        Facilitie::factory()->create();
 
         $booking = Booking::factory()->create()->toArray();
 
@@ -156,8 +143,8 @@ class BookingsTest extends TestCase
     /** @test */
     public function booking_can_delete_his_account()
     {
-        \App\Models\Member::factory()->create();
-        \App\Models\Facilitie::factory()->create();
+        Member::factory()->create();
+        Facilitie::factory()->create();
 
         $booking = Booking::factory()->create()->toArray();
 

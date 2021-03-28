@@ -13,7 +13,8 @@ class MembersTest extends TestCase
     /** @test */
     public function can_create_member_with_valid_data()
     {
-        $member = Member::factory()->make()->toArray();
+        Member::factory()->create();
+        $member = Member::factory()->make(['recommendedby' => 1])->toArray();
 
         $response = $this->post(route('members.store'), $member, $this->token);
 
@@ -25,8 +26,7 @@ class MembersTest extends TestCase
             'address',
             'zipcode',
             'telephone',
-//            'recommendedby',
-            'createdby',
+            'recommendedby',
             'memid'
         ]);
     }
@@ -69,14 +69,6 @@ class MembersTest extends TestCase
     }
 
     /** @test */
-    public function createdby_must_exists()
-    {
-        $member = Member::factory()->make(['createdby' => 999999])->toArray();
-
-        $this->post(route('members.store'), $member, $this->token)->assertStatus(422);
-    }
-
-    /** @test */
     public function can_show_member_by_id()
     {
         $member = Member::factory()->create()->toArray();
@@ -90,7 +82,6 @@ class MembersTest extends TestCase
             'zipcode',
             'telephone',
             'recommendedby',
-            'createdby',
             'memid'
         ]);
     }
@@ -98,7 +89,7 @@ class MembersTest extends TestCase
     /** @test */
     public function can_not_show_member_by_wrong_id()
     {
-        $member = Member::factory()->create()->toArray();
+        Member::factory()->create();
 
         $response = $this->put(route('members.show', ['member' => 99999]), [], $this->token);
 

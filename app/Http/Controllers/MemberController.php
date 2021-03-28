@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Booking;
 use App\Models\Member;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -11,33 +10,11 @@ class MemberController extends Controller
 {
     public function index(Request $request)
     {
-        $validated = Validator::make($request->all(), [
-            'joinAfter' => 'date',
-            'joinBefore' => 'date|after:joinAfter'
-        ]);
-
-        if ($validated->fails()) {
-            return response()->json($validated->errors()->first(), 400);
-        }
-
-
         $members = Member::query();
-
-        if ($request->has('joinAfter')) {
-            $members = $members->whereDate('joindate', '>=', $request->joinAfter);
-        }
-
-        if ($request->has('joinBefore')) {
-            $members = $members->whereDate('joindate', '<=', $request->joinBefore);
-        }
+//        $members = Member::all()->sortByDesc("memid");
 
         return $members->orderBy('memid')->get();
     }
-
-//    public function reservations($id)
-//    {
-//        return Booking::getReservationsByMemId($id)->get();
-//    }
 
     public function show(Member $member)
     {
@@ -52,14 +29,12 @@ class MemberController extends Controller
             'address' => 'required|string|min:3|max:255',
             'zipcode' => 'required|integer|min:3',
             'telephone' => 'required|min:3',
-            'recommendedby' => 'integer|exists:members,memid',
-            'createdby' => 'required|integer|exists:users,userid'
+            'recommendedby' => 'integer|exists:members,memid'
         ]);
 
         if ($validated->fails()) {
             return response()->json($validated->errors()->first(), 422);
         }
-
 
         $member = Member::create($request->all());
 

@@ -20,8 +20,6 @@ class CreateFacilitiesTable extends Migration
             $table->float('guestcost')->unsigned();
             $table->integer('initialoutlay')->unsigned();
             $table->integer('monthlymaintenance')->unsigned();
-            $table->integer('createdby')->unsigned();
-            $table->foreign('createdby')->references('userid')->on('users')->onDelete('cascade');
         });
     }
 

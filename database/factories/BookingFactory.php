@@ -32,8 +32,7 @@ class BookingFactory extends Factory
             'facid' => $facilities->random()->facid,
             'memid' => $members->random()->memid,
             'starttime' => $this->faker->dateTimeBetween('2012-07-03', '2013-01-01'),
-            'slots' => $this->faker->numberBetween(1, 14),
-            'createdby' => $users->random()->userid
+            'slots' => $this->faker->numberBetween(1, 14)
         ];
     }
 }

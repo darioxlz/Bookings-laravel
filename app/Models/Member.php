@@ -45,8 +45,7 @@ class Member extends Model
         'zipcode',
         'telephone',
         'recommendedby',
-        'joindate',
-        'createdby'
+        'joindate'
     ];
 
     public function booking () {

@@ -39,8 +39,7 @@ class Facilitie extends Model
         'membercost',
         'guestcost',
         'initialoutlay',
-        'monthlymaintenance',
-        'createdby'
+        'monthlymaintenance'
     ];
 
     public function booking () {

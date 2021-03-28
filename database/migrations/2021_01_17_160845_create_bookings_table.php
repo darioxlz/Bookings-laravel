@@ -16,13 +16,11 @@ class CreateBookingsTable extends Migration
         Schema::create('bookings', function (Blueprint $table) {
             $table->increments('bookid');
             $table->integer('facid')->unsigned()->nullable();
-            $table->foreign('facid')->references('facid')->on('facilities')->onDelete('set null');
+            $table->foreign('facid')->references('facid')->on('facilities')->onDelete('cascade');
             $table->integer('memid')->unsigned()->nullable();
-            $table->foreign('memid')->references('memid')->on('members')->onDelete('set null');
+            $table->foreign('memid')->references('memid')->on('members')->onDelete('cascade');
             $table->timestamp('starttime');
             $table->integer('slots')->unsigned();
-            $table->integer('createdby')->unsigned();
-            $table->foreign('createdby')->references('userid')->on('users')->onDelete('cascade');
         });
     }
 

@@ -38,19 +38,13 @@ class BookingController extends Controller
         return $booking;
     }
 
-    public function bookingsByMemId($memid)
-    {
-        return Booking::getBookingsByMemId($memid)->get();
-    }
-
     public function store(Request $request)
     {
         $validated = Validator::make($request->all(), [
             'facid' => 'required|integer|exists:facilities,facid',
             'memid' => 'required|integer|exists:members,memid',
             'starttime' => 'required|date',
-            'slots' => 'required|integer',
-            'createdby' => 'required|integer|exists:users,userid'
+            'slots' => 'required|integer'
         ]);
 
         if ($validated->fails()) {

@@ -29,8 +29,7 @@ class FacilitieFactory extends Factory
             'membercost' => $this->faker->randomFloat(2, 0, 35),
             'guestcost' => $this->faker->randomFloat(2, 0, 80),
             'initialoutlay' => $this->faker->numberBetween(320, 100000),
-            'monthlymaintenance' => $this->faker->numberBetween(15, 3000),
-            'createdby' => $users->random()->userid
+            'monthlymaintenance' => $this->faker->numberBetween(15, 3000)
         ];
     }
 }
