@@ -1,0 +1,20 @@
+#!/bin/bash
+
+# ENVIRONMENT VARIABLES ----------------------------------
+	cp /clubdata-api/.env.example /clubdata-api/.env
+
+# MIGRATIONS -----------------------------------
+	echo 'Running Migrations...'
+	cd /clubdata-api
+	composer dump-autoload
+	php artisan key:generate
+	php artisan jwt:secret
+	php artisan migrate:fresh --force -n
+	echo 'Migrations done!'
+
+# APACHE -----------------------------------
+# first arg is `-f` or `--some-option`
+if [ "${1#-}" != "$1" ]; then
+	set -- apache2-foreground "$@"
+fi
+exec "$@"
