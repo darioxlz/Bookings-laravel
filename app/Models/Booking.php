@@ -24,6 +24,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|Booking whereSlots($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Booking whereStarttime($value)
  * @mixin \Eloquent
+ * @method static \Database\Factories\BookingFactory factory(...$parameters)
  */
 class Booking extends Model
 {

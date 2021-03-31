@@ -37,21 +37,21 @@ class BookingsTest extends TestCase
     public function cannot_create_booking_with_invalid_data()
     {
         // Testing with single attributes
-        $this->post(route('bookings.store'), [], $this->token)->assertStatus(422);
-        $this->post(route('bookings.store'), ['starttime' => 'Juanito'], $this->token)->assertStatus(422);
-        $this->post(route('bookings.store'), ['slots' => 'Galarga'], $this->token)->assertStatus(422);
-        $this->post(route('bookings.store'), ['facid' => 'xxxxx'], $this->token)->assertStatus(422);
+        $this->post(route('bookings.store'), [], $this->token)->assertStatus(400);
+        $this->post(route('bookings.store'), ['starttime' => 'Juanito'], $this->token)->assertStatus(400);
+        $this->post(route('bookings.store'), ['slots' => 'Galarga'], $this->token)->assertStatus(400);
+        $this->post(route('bookings.store'), ['facid' => 'xxxxx'], $this->token)->assertStatus(400);
 
         // Testing in combination of two attributes
         $this->post(route('bookings.store'), [
             'firstname' => 'John',
             'surname' => 'Doe'
-        ], $this->token)->assertStatus(422);
+        ], $this->token)->assertStatus(400);
 
         $this->post(route('bookings.store'), [
             'starttime' => 'micasaaaa',
             'slots' => '123456789'
-        ], $this->token)->assertStatus(422);
+        ], $this->token)->assertStatus(400);
 
         // Testing with all attributes but invalid syntax
         $this->post(route('bookings.store'), [
@@ -59,7 +59,7 @@ class BookingsTest extends TestCase
             'memdid' => 11,
             'starttime' => 99,
             'slots' => 9999
-        ], $this->token)->assertStatus(422);
+        ], $this->token)->assertStatus(400);
     }
 
     /** @test */
@@ -70,7 +70,7 @@ class BookingsTest extends TestCase
 
         $booking = Booking::factory()->make(['facid' => 999999])->toArray();
 
-        $this->post(route('bookings.store'), $booking, $this->token)->assertStatus(422);
+        $this->post(route('bookings.store'), $booking, $this->token)->assertStatus(400);
     }
 
     /** @test */
@@ -81,7 +81,7 @@ class BookingsTest extends TestCase
 
         $booking = Booking::factory()->make(['memid' => 999999])->toArray();
 
-        $this->post(route('bookings.store'), $booking, $this->token)->assertStatus(422);
+        $this->post(route('bookings.store'), $booking, $this->token)->assertStatus(400);
     }
 
     /** @test */
@@ -152,7 +152,7 @@ class BookingsTest extends TestCase
 
         $response = $this->delete(route('bookings.destroy', ['booking' => $booking['bookid']]), [], $this->token);
 
-        $response->assertStatus(204);
+        $response->assertStatus(200);
         $this->assertDatabaseMissing('bookings', ['bookid' => $booking['bookid']]);
     }
 }

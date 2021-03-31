@@ -8,17 +8,15 @@ use Illuminate\Support\Facades\Validator;
 
 class MemberController extends Controller
 {
-    public function index(Request $request)
+    public function index()
     {
-        $members = Member::query();
-//        $members = Member::all()->sortByDesc("memid");
-
-        return $members->orderBy('memid')->get();
+        return Member::orderBy('memid')->simplePaginate(5);
     }
 
-    public function show(Member $member)
-    {
-        return $member;
+    public function show($member_id)
+    {$member = Member::findOrFail($member_id);
+
+        return response()->json($member, 200);
     }
 
     public function store(Request $request)
@@ -33,7 +31,9 @@ class MemberController extends Controller
         ]);
 
         if ($validated->fails()) {
-            return response()->json($validated->errors()->first(), 422);
+            return response()->json(array(
+                'errors' => $validated->messages()
+            ), 400);
         }
 
         $member = Member::create($request->all());
@@ -41,7 +41,7 @@ class MemberController extends Controller
         return response()->json($member, 201);
     }
 
-    public function update(Request $request, Member $member)
+    public function update(Request $request, $member_id)
     {
         $validated = Validator::make($request->all(), [
             'surname' => 'string|min:3|max:255',
@@ -53,19 +53,21 @@ class MemberController extends Controller
         ]);
 
         if ($validated->fails()) {
-            return response()->json($validated->errors()->first(), 422);
+            return response()->json(array(
+                'errors' => $validated->messages()
+            ), 400);
         }
 
-
+        $member = Member::findOrFail($member_id);
         $member->update($request->all());
 
         return response()->json($member, 200);
     }
 
-    public function destroy(Member $member)
+    public function destroy($member_id)
     {
-        $member->delete();
+        Member::findOrFail($member_id)->delete();
 
-        return response()->json($member, 204);
+        return response()->json(array('message' => 'resource deleted'), 200);
     }
 }

@@ -39,13 +39,12 @@ class Handler extends ExceptionHandler
         });
     }
 
-    public function render($request, Throwable $e)
+    public function render($request, $e)
     {
-        // This will replace our 404 response with
-        // a JSON response.
+        // This will replace our 404 response with a JSON response.
         if ($e instanceof ModelNotFoundException) {
             return response()->json([
-                'error' => 'Resource not found'
+                'message' => 'Resource not found'
             ], 404);
         }
 

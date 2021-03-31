@@ -35,21 +35,21 @@ class MembersTest extends TestCase
     public function cannot_create_member_with_invalid_data()
     {
         // Testing with single attributes
-        $this->post(route('members.store'), [], $this->token)->assertStatus(422);
-        $this->post(route('members.store'), ['firstname' => 'Juanito'], $this->token)->assertStatus(422);
-        $this->post(route('members.store'), ['surname' => 'Galarga'], $this->token)->assertStatus(422);
-        $this->post(route('members.store'), ['zipcode' => 'xxxxx'], $this->token)->assertStatus(422);
+        $this->post(route('members.store'), [], $this->token)->assertStatus(400);
+        $this->post(route('members.store'), ['firstname' => 'Juanito'], $this->token)->assertStatus(400);
+        $this->post(route('members.store'), ['surname' => 'Galarga'], $this->token)->assertStatus(400);
+        $this->post(route('members.store'), ['zipcode' => 'xxxxx'], $this->token)->assertStatus(400);
 
         // Testing in combination of two attributes
         $this->post(route('members.store'), [
             'firstname' => 'John',
             'surname' => 'Doe'
-        ], $this->token)->assertStatus(422);
+        ], $this->token)->assertStatus(400);
 
         $this->post(route('members.store'), [
             'address' => 'micasaaaa',
             'telephone' => '123456789'
-        ], $this->token)->assertStatus(422);
+        ], $this->token)->assertStatus(400);
 
         // Testing with all attributes but invalid syntax
         $this->post(route('members.store'), [
@@ -57,7 +57,7 @@ class MembersTest extends TestCase
             'surname' => 11,
             'zipcode' => 99,
             'recommendedby' => 9999
-        ], $this->token)->assertStatus(422);
+        ], $this->token)->assertStatus(400);
     }
 
     /** @test */
@@ -65,7 +65,7 @@ class MembersTest extends TestCase
     {
         $member = Member::factory()->make(['recommendedby' => 999999])->toArray();
 
-        $this->post(route('members.store'), $member, $this->token)->assertStatus(422);
+        $this->post(route('members.store'), $member, $this->token)->assertStatus(400);
     }
 
     /** @test */
@@ -126,7 +126,7 @@ class MembersTest extends TestCase
 
         $response = $this->delete(route('members.destroy', ['member' => $member['memid']]), [], $this->token);
 
-        $response->assertStatus(204);
+        $response->assertStatus(200);
         $this->assertDatabaseMissing('members', ['memid' => $member['memid']]);
     }
 }

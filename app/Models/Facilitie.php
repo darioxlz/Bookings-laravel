@@ -26,6 +26,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|Facilitie whereMonthlymaintenance($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Facilitie whereName($value)
  * @mixin \Eloquent
+ * @method static \Database\Factories\FacilitieFactory factory(...$parameters)
  */
 class Facilitie extends Model
 {

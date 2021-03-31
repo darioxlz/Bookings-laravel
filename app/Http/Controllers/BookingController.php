@@ -16,9 +16,10 @@ class BookingController extends Controller
         ]);
 
         if ($validated->fails()) {
-            return response()->json($validated->errors()->first(), 400);
+            return response()->json(array(
+                'errors' => $validated->messages()
+            ), 400);
         }
-
 
         $bookings = Booking::with('member')->with('facility');
 
@@ -30,12 +31,14 @@ class BookingController extends Controller
             $bookings = $bookings->whereDate('starttime', '<=', $request->dateBefore);
         }
 
-        return $bookings->orderBy('bookid')->get();
+        return $bookings->orderBy('bookid')->simplePaginate(15);
     }
 
-    public function show(Booking $booking)
+    public function show($booking_id)
     {
-        return $booking;
+        $booking = Booking::findOrFail($booking_id);
+
+        return response()->json($booking, 200);
     }
 
     public function store(Request $request)
@@ -48,7 +51,9 @@ class BookingController extends Controller
         ]);
 
         if ($validated->fails()) {
-            return response()->json($validated->errors()->first(), 422);
+            return response()->json(array(
+                'errors' => $validated->messages()
+            ), 400);
         }
 
 
@@ -57,7 +62,7 @@ class BookingController extends Controller
         return response()->json($booking, 201);
     }
 
-    public function update(Request $request, Booking $booking)
+    public function update(Request $request, $booking_id)
     {
         $validated = Validator::make($request->all(), [
             'facid' => 'integer|exists:facilities,facid',
@@ -68,19 +73,21 @@ class BookingController extends Controller
         ]);
 
         if ($validated->fails()) {
-            return response()->json($validated->errors()->first(), 400);
+            return response()->json(array(
+                'errors' => $validated->messages()
+            ), 400);
         }
 
-
+        $booking = Booking::findOrFail($booking_id);
         $booking->update($request->all());
 
         return response()->json($booking, 200);
     }
 
-    public function destroy(Booking $booking)
+    public function destroy($booking_id)
     {
-        $booking->delete();
+        Booking::findOrFail($booking_id)->delete();
 
-        return response()->json(null, 204);
+        return response()->json(array('message' => 'resource deleted'), 200);
     }
 }

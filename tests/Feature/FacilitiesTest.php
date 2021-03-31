@@ -33,21 +33,21 @@ class FacilitiesTest extends TestCase
     public function cannot_create_facility_with_invalid_data()
     {
         // Testing with single attributes
-        $this->post(route('facilities.store'), [], $this->token)->assertStatus(422);
-        $this->post(route('facilities.store'), ['name' => 'Jua'], $this->token)->assertStatus(422);
-        $this->post(route('facilities.store'), ['membercost' => 'Galarga'], $this->token)->assertStatus(422);
-        $this->post(route('facilities.store'), ['initialoutlay' => 'xxxxx'], $this->token)->assertStatus(422);
+        $this->post(route('facilities.store'), [], $this->token)->assertStatus(400);
+        $this->post(route('facilities.store'), ['name' => 'Jua'], $this->token)->assertStatus(400);
+        $this->post(route('facilities.store'), ['membercost' => 'Galarga'], $this->token)->assertStatus(400);
+        $this->post(route('facilities.store'), ['initialoutlay' => 'xxxxx'], $this->token)->assertStatus(400);
 
         // Testing in combination of two attributes
         $this->post(route('facilities.store'), [
             'name' => 'John',
             'membercost' => 'Doe'
-        ], $this->token)->assertStatus(422);
+        ], $this->token)->assertStatus(400);
 
         $this->post(route('facilities.store'), [
             'initialoutlay' => 'micasaaaa',
             'monthlymaintenance' => '123456789'
-        ], $this->token)->assertStatus(422);
+        ], $this->token)->assertStatus(400);
 
         // Testing with all attributes but invalid syntax
         $this->post(route('facilities.store'), [
@@ -56,7 +56,7 @@ class FacilitiesTest extends TestCase
             'guestcost' => "p",
             'initialoutlay' => 99,
             'monthlymaintenance' => "kkkk"
-        ], $this->token)->assertStatus(422);
+        ], $this->token)->assertStatus(400);
     }
 
     /** @test */
@@ -107,7 +107,7 @@ class FacilitiesTest extends TestCase
 
         $response = $this->delete(route('facilities.destroy', ['facility' => $facility['facid']]), [], $this->token);
 
-        $response->assertStatus(204);
+        $response->assertStatus(200);
         $this->assertDatabaseMissing('facilities', ['facid' => $facility['facid']]);
     }
 }

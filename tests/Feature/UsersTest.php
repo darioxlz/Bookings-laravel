@@ -34,21 +34,21 @@ class UsersTest extends TestCase
     public function cannot_create_user_with_invalid_data()
     {
         // Testing with single attributes
-        $this->post(route('auth.register'), [])->assertStatus(422);
-        $this->post(route('auth.register'), ['name' => 'Juanito'])->assertStatus(422);
-        $this->post(route('auth.register'), ['password' => '123456789'])->assertStatus(422);
-        $this->post(route('auth.register'), ['email' => 'john@example.com'])->assertStatus(422);
+        $this->post(route('auth.register'), [])->assertStatus(400);
+        $this->post(route('auth.register'), ['name' => 'Juanito'])->assertStatus(400);
+        $this->post(route('auth.register'), ['password' => '123456789'])->assertStatus(400);
+        $this->post(route('auth.register'), ['email' => 'john@example.com'])->assertStatus(400);
 
         // Testing in combination of two attributes
         $this->post(route('auth.register'), [
             'name' => 'John Doe',
             'email' => 'john@doe.com'
-        ])->assertStatus(422);
+        ])->assertStatus(400);
 
         $this->post(route('auth.register'), [
             'email' => 'john@doe.com',
             'password' => '123456789'
-        ])->assertStatus(422);
+        ])->assertStatus(400);
 
         // Testing with all attributes but invalid syntax
         $this->post(route('auth.register'), [
@@ -56,14 +56,14 @@ class UsersTest extends TestCase
             'password' => '12345',
             'confirm_password' => '123456',
             'email' => 'john@doe.com'
-        ])->assertStatus(422);
+        ])->assertStatus(400);
 
         $this->post(route('auth.register'), $user = [
             'name' => 'John Doe',
             'password' => '123456',
             'confirm_password' => '123456',
             'email' => 'johndoecom'
-        ])->assertStatus(422);
+        ])->assertStatus(400);
     }
 
     /** @test */
@@ -72,7 +72,7 @@ class UsersTest extends TestCase
         $secondUser = $this->getUnpersistedUser();
         $secondUser['email'] = $this->user->email;
 
-        $this->post(route('auth.register'), $secondUser)->assertStatus(422);
+        $this->post(route('auth.register'), $secondUser)->assertStatus(400);
     }
 
     /** @test */

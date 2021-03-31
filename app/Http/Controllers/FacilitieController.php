@@ -10,12 +10,14 @@ class FacilitieController extends Controller
 {
     public function index()
     {
-        return Facilitie::orderBy('facid')->get();
+        return Facilitie::orderBy('facid')->simplePaginate(5);
     }
 
-    public function show(Facilitie $facility)
+    public function show($facility_id)
     {
-        return $facility;
+        $facility = Facilitie::findOrFail($facility_id);
+
+        return response()->json($facility, 200);
     }
 
     public function store(Request $request)
@@ -29,7 +31,9 @@ class FacilitieController extends Controller
         ]);
 
         if ($validated->fails()) {
-            return response()->json($validated->errors()->first(), 422);
+            return response()->json(array(
+                'errors' => $validated->messages()
+            ), 400);
         }
 
 
@@ -38,7 +42,7 @@ class FacilitieController extends Controller
         return response()->json($facilitie, 201);
     }
 
-    public function update(Request $request, Facilitie $facility)
+    public function update(Request $request, $facility_id)
     {
         $validated = Validator::make($request->all(), [
             'name' => 'string|min:3|max:255',
@@ -50,19 +54,22 @@ class FacilitieController extends Controller
         ]);
 
         if ($validated->fails()) {
-            return response()->json($validated->errors()->first(), 422);
+            return response()->json(array(
+                'errors' => $validated->messages()
+            ), 400);
         }
 
 
+        $facility = Facilitie::findOrFail($facility_id);
         $facility->update($request->all());
 
         return response()->json($facility, 200);
     }
 
-    public function destroy(Facilitie $facility)
+    public function destroy($facility_id)
     {
-        $facility->delete();
+        Facilitie::findOrFail($facility_id)->delete();
 
-        return response()->json(null, 204);
+        return response()->json(array('message' => 'resource deleted'), 200);
     }
 }
