@@ -2,8 +2,11 @@
 
 namespace App\Exceptions;
 
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -41,11 +44,13 @@ class Handler extends ExceptionHandler
 
     public function render($request, $e)
     {
-        // This will replace our 404 response with a JSON response.
-        if ($e instanceof ModelNotFoundException) {
+        // This will return 404 if a entity is not found (using ID mostly) in the db
+        if ($e instanceof ModelNotFoundException || $e instanceof NotFoundHttpException) {
             return response()->json([
                 'message' => 'Resource not found'
             ], 404);
+        } elseif ($e instanceof UnauthorizedHttpException || $e instanceof AuthenticationException) {
+            return response()->json(['message' => $e->getMessage()], 401);
         }
 
         return parent::render($request, $e);

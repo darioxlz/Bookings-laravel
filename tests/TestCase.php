@@ -21,10 +21,12 @@ abstract class TestCase extends BaseTestCase
         parent::setUp();
 
         User::factory()->count(3)->create();
-        $this->user = json_decode($this->post(route('auth.register'), User::factory()->make(['password' => '12345678', 'confirm_password' => '12345678'])->makeVisible('password')->toArray())->getContent());
+        $post_user_payload = User::factory()->make(['password' => '12345678', 'confirm_password' => '12345678'])->makeVisible('password')->toArray();
+
+        $this->user = json_decode($this->post(route('auth.register'), $post_user_payload)->getContent());
         $this->token = json_decode($this->post(route('auth.login'), ['email' => $this->user->email, 'password' => '12345678'])->getContent());
 
-        $this->token = ['Authorization' => "Bearer ".$this->token->token];
+        $this->token = ['Authorization' => $this->token->token_type." ".$this->token->access_token];
 
         //$this->withoutExceptionHandling(); //To get the actual Exception whenever it occurs instead of Laravel handing the exception.
     }

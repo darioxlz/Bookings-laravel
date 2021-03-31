@@ -102,7 +102,7 @@ class UsersTest extends TestCase
         $response = $this->post(route('auth.login'), $credentials)->assertStatus(200);
 
         $desiredStructure = [
-            'token'
+            'access_token'
         ];
 
         $response->assertStatus(200)->assertJsonStructure($desiredStructure);

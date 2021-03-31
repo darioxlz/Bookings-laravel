@@ -21,9 +21,9 @@ use Illuminate\Support\Facades\Route;
 Route::post('register', [AuthController::class, 'register'])->name('auth.register');
 Route::post('login', [AuthController::class, 'login'])->name('auth.login');
 
-Route::group(['middleware' => 'jwt.verify'], function () {
+Route::group(['middleware' => 'jwt.auth'], function () {
     Route::get('logout', [AuthController::class, 'logout'])->name('auth.logout');
-    Route::get('user-info', [AuthController::class, 'getUser'])->name('auth.user-info');
+    Route::get('user-info', [AuthController::class, 'me'])->name('auth.user-info');
 
     Route::apiResource('users', UserController::class)->except([
         'create', 'store'
@@ -36,4 +36,6 @@ Route::group(['middleware' => 'jwt.verify'], function () {
 
 
     Route::apiResource('bookings', BookingController::class);
+
+    Route::get('refresh', [AuthController::class, 'refresh'])->name('auth.refresh');
 });
