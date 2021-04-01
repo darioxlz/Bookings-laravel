@@ -8,7 +8,7 @@
 	cd /clubdata-api
 	composer dump-autoload
 	php artisan key:generate
-	php artisan jwt:secret
+	php artisan jwt:secret --force -n
 	php artisan migrate:fresh --force -n
 	echo 'Migrations done!'
 
